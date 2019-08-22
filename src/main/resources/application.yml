@@ -1,0 +1,34 @@
+server:
+  port: 8083
+spring:
+  datasource:
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #url: jdbc:mysql://localhost:3306/kiwi_blog?autoReconnect=true&serverTimezone=UTC
+    #username: root
+    #password: password
+    url: jdbc:mysql://syh80882.cafe24.com/syh80882
+    driverClassName: com.mysql.jdbc.Driver
+    username: syh80882
+    password: abc123!@
+    sql-script-encoding: utf-8
+  thymeleaf:
+    mode: HTML
+    cache: false
+  jpa:
+    hibernate:
+      use-new-id-generator-mappings: false
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  oauth:
+    jwt:
+      public-key: test
+
+      expirationInMs: 604800000
+
+environments:
+  server-url: http://127.0.0.1
