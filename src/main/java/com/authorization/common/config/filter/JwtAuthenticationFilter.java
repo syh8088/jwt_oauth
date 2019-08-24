@@ -1,4 +1,4 @@
-package com.authorization.common.config;
+package com.authorization.common.config.filter;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;

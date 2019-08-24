@@ -1,6 +1,9 @@
 package com.authorization.common.config;
 
+import com.authorization.common.config.filter.JwtAuthenticationFilter;
 import com.authorization.common.config.handler.CustomAuthenticationProvider;
+import com.authorization.common.config.handler.CustomAuthenticationSuccessHandler;
+import com.authorization.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,10 +19,14 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomAuthenticationProvider customAuthenticationProvider;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public SecurityConfig(CustomAuthenticationProvider customAuthenticationProvider) {
+    public SecurityConfig(CustomAuthenticationProvider customAuthenticationProvider, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler, MemberRepository memberRepository) {
         this.customAuthenticationProvider = customAuthenticationProvider;
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -32,14 +39,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .csrf().disable()
-                .addFilterBefore(authenticationFilter(), BasicAuthenticationFilter.class)
                 .requiresChannel().anyRequest().requiresSecure()
-                .and()
-                .headers().frameOptions().sameOrigin()
-                .and()
+            .and()
+                //.headers().frameOptions().sameOrigin()
+                //.and()
                 .authorizeRequests()
                 .antMatchers( "/oauth/token").permitAll()
-                .antMatchers("/tokens").permitAll();
+                .antMatchers("/tokens").permitAll()
+            .and()
+                .addFilterBefore(authenticationFilter(), BasicAuthenticationFilter.class);
     }
 
     @Bean

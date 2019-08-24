@@ -25,9 +25,10 @@ spring:
 
 app:
   oauth:
+    client-key: 67iU66Gc6re47YKk7JyE7YG065287Ja4
+    secret-key: 7YKk7JyE67iU66Gc6re47Iuc7YGs66a8
     jwt:
       public-key: test
-
       expirationInMs: 604800000
 
 environments:

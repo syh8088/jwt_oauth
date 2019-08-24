@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,4 +34,6 @@ public class Member extends Common {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "member_role_mapping", joinColumns = @JoinColumn(name = "memberNo"), inverseJoinColumns = @JoinColumn(name = "roleNo"))
     private List<Role> roles = new ArrayList<>();
+
+    private LocalDateTime todayLogin;
 }

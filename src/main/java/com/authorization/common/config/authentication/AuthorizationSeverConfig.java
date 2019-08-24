@@ -3,6 +3,7 @@ package com.authorization.common.config.authentication;
 import com.authorization.common.config.converter.CustomAccessTokenConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -28,14 +29,18 @@ import java.util.Arrays;
 @EnableAuthorizationServer
 public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapter {
 
+    @Value("${app.oauth.client-key}")
+    private String clientKey;
+
+    @Value("${app.oauth.secret-key}")
+    private String secretKey;
+
     private final CustomAccessTokenConverter customAccessTokenConverter;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthorizationSeverConfig(CustomAccessTokenConverter customAccessTokenConverter, PasswordEncoder passwordEncoder
-            , @Qualifier("authenticationManagerBean") AuthenticationManager authenticationManager
-                                    ) {
+    public AuthorizationSeverConfig(CustomAccessTokenConverter customAccessTokenConverter, PasswordEncoder passwordEncoder, @Qualifier("authenticationManagerBean") AuthenticationManager authenticationManager) {
         this.customAccessTokenConverter = customAccessTokenConverter;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -45,26 +50,12 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
 
         clients.inMemory()
-                .withClient("zeyo_client")
-                .secret(passwordEncoder.encode("iamclient"))
+                .withClient(clientKey)
+                .secret(passwordEncoder.encode(secretKey))
                 .authorizedGrantTypes("password", "authorization_code", "refresh_token")
                 .scopes("client", "read", "write")
                 .accessTokenValiditySeconds(3600)
-                .refreshTokenValiditySeconds(2592000)
-
-                .and()
-                .withClient("zeyo_admin")
-                .secret(passwordEncoder.encode("iamadmin"))
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token")
-                .scopes("admin", "read", "write")
-                .accessTokenValiditySeconds(3600)
-                .refreshTokenValiditySeconds(2592000)
-
-                .and()
-                .withClient("zeyo_user")
-                .secret(passwordEncoder.encode("iamuser"))
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token")
-                .scopes("user", "read", "write").accessTokenValiditySeconds(3600).refreshTokenValiditySeconds(2592000);
+                .refreshTokenValiditySeconds(2592000);
     }
 
     @Bean
@@ -104,6 +95,7 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
         endpoints.tokenStore(tokenStore())
                 .tokenEnhancer(tokenEnhancerChain)
                 .authenticationManager(authenticationManager);
+
         //.userDetailsService(userDetailsService);
     }
 }
