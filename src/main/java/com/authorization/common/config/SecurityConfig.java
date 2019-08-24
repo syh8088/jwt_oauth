@@ -20,13 +20,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomAuthenticationProvider customAuthenticationProvider;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-    private final MemberRepository memberRepository;
 
     @Autowired
     public SecurityConfig(CustomAuthenticationProvider customAuthenticationProvider, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler, MemberRepository memberRepository) {
         this.customAuthenticationProvider = customAuthenticationProvider;
         this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
-        this.memberRepository = memberRepository;
     }
 
     @Override
