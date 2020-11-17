@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
@@ -52,10 +53,18 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
         clients.inMemory()
                 .withClient(clientKey)
                 .secret(passwordEncoder.encode(secretKey))
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token")
+                .authorizedGrantTypes("password", "refresh_token")
                 .scopes("client", "read", "write")
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(2592000);
+    }
+
+    // /oauth/check_token 활성화
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()")
+                .allowFormAuthenticationForClients();
     }
 
     @Bean
@@ -95,7 +104,5 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
         endpoints.tokenStore(tokenStore())
                 .tokenEnhancer(tokenEnhancerChain)
                 .authenticationManager(authenticationManager);
-
-        //.userDetailsService(userDetailsService);
     }
 }

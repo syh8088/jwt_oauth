@@ -43,7 +43,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         Member member = memberRepository.findByIdAndUseYn(memberId, true);
         member.setTodayLogin(LocalDateTime.now());
 
-        // NOTE #9 Authentication token 을 발행(중요!)
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
     }
 
