@@ -101,7 +101,8 @@ public class AuthorizationSeverConfig extends AuthorizationServerConfigurerAdapt
     public void configure(final AuthorizationServerEndpointsConfigurer endpoints) {
         final TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
-        endpoints.tokenStore(tokenStore())
+        endpoints
+                //.tokenStore(tokenStore())
                 .tokenEnhancer(tokenEnhancerChain)
                 .authenticationManager(authenticationManager);
     }
